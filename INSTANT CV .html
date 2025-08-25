@@ -1,0 +1,218 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    
+    <div class="form-section">
+      <h2>Enter Your Details</h2>
+      <label>Full Name: <input type="text" id="name"></label>
+      <label>Father's Name: <input type="text" id="fatherName"></label>
+      <label>Mother's Name: <input type="text" id="motherName"></label>
+      <label>Email: <input type="email" id="email"></label>
+      <label>Phone: <input type="text" id="phone"></label>
+      <label>Address: <textarea id="address"></textarea></label>
+      <label>Profile Photo: <input type="file" id="photo-upload" accept="image/*"></label>
+      <label>Education: <textarea id="education"></textarea></label>
+      <label>Experience: <textarea id="experience"></textarea></label>
+      <label>Skills (comma-separated): <input type="text" id="skills"></label>
+      <button onclick="generateCV()">Generate CV</button>
+    </div>
+
+    <div class="cv-section hidden" id="cv">
+      <div class="cv-header">
+        <h1 id="cv-name">Your Name</h1>
+        <img id="cv-photo" src="#" alt="Profile Photo" style="display:none;">
+      </div>
+      <p><strong>Father's Name:</strong> <span id="cv-fatherName"></span></p>
+      <p><strong>Mother's Name:</strong> <span id="cv-motherName"></span></p>
+      <p><strong>Email:</strong> <span id="cv-email"></span></p>
+      <p><strong>Phone:</strong> <span id="cv-phone"></span></p>
+      <p><strong>Address:</strong> <span id="cv-address"></span></p>
+
+      <h3>Education</h3>
+      <p id="cv-education"></p>
+
+      <h3>Experience</h3>
+      <p id="cv-experience"></p>
+
+      <h3>Skills</h3>
+      <ul id="cv-skills"></ul>
+
+      <button onclick="window.print()">Print / Save as PDF</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+<style>body {
+  font-family: sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 900px;
+  gap: 20px;
+}
+
+.form-section, .cv-section {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-section label, .form-section input, .form-section textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.form-section input[type="text"], .form-section input[type="email"], .form-section textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-section button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.form-section button:hover {
+  background-color: #0056b3;
+}
+
+.hidden {
+  display: none;
+}
+
+.cv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cv-header h1 {
+  margin: 0;
+  color: #333;
+}
+
+#cv-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid black;
+}
+
+.cv-section h3 {
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+  color: #555;
+  margin-top: 25px;
+}
+
+.cv-section ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.cv-section li {
+  margin-bottom: 5px;
+}
+
+@media print {
+  body {
+    background-color: #fff;
+  }
+  .form-section {
+    display: none;
+  }
+  .cv-section {
+    box-shadow: none;
+  }
+}
+</style><script>function generateCV() {
+  // Get input values
+  const name = document.getElementById('name').value;
+  const fatherName = document.getElementById('fatherName').value;
+  const motherName = document.getElementById('motherName').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const address = document.getElementById('address').value;
+  const education = document.getElementById('education').value;
+  const experience = document.getElementById('experience').value;
+  const skills = document.getElementById('skills').value;
+  const photoInput = document.getElementById('photo-upload');
+  const photo = photoInput.files[0];
+
+  // Get CV display elements
+  const cvName = document.getElementById('cv-name');
+  const cvFatherName = document.getElementById('cv-fatherName');
+  const cvMotherName = document.getElementById('cv-motherName');
+  const cvEmail = document.getElementById('cv-email');
+  const cvPhone = document.getElementById('cv-phone');
+  const cvAddress = document.getElementById('cv-address');
+  const cvEducation = document.getElementById('cv-education');
+  const cvExperience = document.getElementById('cv-experience');
+  const cvSkills = document.getElementById('cv-skills');
+  const cvPhoto = document.getElementById('cv-photo');
+  const cvSection = document.getElementById('cv');
+  const formSection = document.querySelector('.form-section');
+
+  // Populate the CV with user data
+  cvName.textContent = name;
+  cvFatherName.textContent = fatherName;
+  cvMotherName.textContent = motherName;
+  cvEmail.textContent = email;
+  cvPhone.textContent = phone;
+  cvAddress.textContent = address;
+  cvEducation.textContent = education;
+  cvExperience.textContent = experience;
+
+  // Handle skills as a list
+  const skillsArray = skills.split(',').map(skill => skill.trim()).filter(skill => skill !== '');
+  cvSkills.innerHTML = ''; // Clear previous skills
+  skillsArray.forEach(skill => {
+    const li = document.createElement('li');
+    li.textContent = skill;
+    cvSkills.appendChild(li);
+  });
+
+  // Handle photo display
+  if (photo) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      cvPhoto.src = e.target.result;
+      cvPhoto.style.display = 'block';
+    };
+    reader.readAsDataURL(photo);
+  } else {
+    cvPhoto.style.display = 'none';
+  }
+
+  // Hide the form and show the CV section
+  formSection.classList.add('hidden');
+  cvSection.classList.remove('hidden');
+}
+</script>
